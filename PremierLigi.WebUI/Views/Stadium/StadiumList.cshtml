@@ -1,0 +1,32 @@
+﻿@model List<PremierLigi.WebUI.Dtos.StadiumDtos.ResultStadiumDto>
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Stadyum Listesi</h3>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Stadyum Adı</th>
+            <th>Şehir</th>
+            <th>Kapasite</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.StadiumId</td>
+                <td>@item.StadiumName</td>
+                <td>@item.City</td>
+                <td>@item.Capacity.ToString("N0")</td>
+                <td><a href="/Stadium/DeleteStadium/@item.StadiumId" class="btn btn-danger btn-sm">Sil</a></td>
+                <td><a href="/Stadium/UpdateStadium/@item.StadiumId" class="btn btn-success btn-sm">Güncelle</a></td>
+            </tr>
+        }
+    </table>
+    <a href="/Stadium/CreateStadium" class="btn btn-info">Yeni Stadyum Ekle</a>
+</div>

@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <h2>Dashboard</h2>
+    <p>Premier Ligi Yönetim Paneli · 2025/26 Sezonu</p>
+</div>
+
+<!-- STAT KARTLARI -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="admin-card text-center">
+            <div style="font-size:2rem;">🛡</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#38003c;" id="stat-teams">-</div>
+            <div style="font-size:0.8rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Takım</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card text-center">
+            <div style="font-size:2rem;">📋</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#38003c;" id="stat-matches">-</div>
+            <div style="font-size:0.8rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Toplam Maç</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card text-center">
+            <div style="font-size:2rem;">✅</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#16a34a;" id="stat-finished">-</div>
+            <div style="font-size:0.8rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Tamamlanan</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card text-center">
+            <div style="font-size:2rem;">⏳</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#ca8a04;" id="stat-upcoming">-</div>
+            <div style="font-size:0.8rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Yaklaşan</div>
+        </div>
+    </div>
+</div>
+
+<!-- HIZLI ERİŞİM -->
+<div class="admin-card mb-4">
+    <h6 style="font-weight:700;margin-bottom:16px;color:#38003c;">⚡ Hızlı Erişim</h6>
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-controller="Match" asp-action="CreateMatch" class="btn btn-pl">+ Maç Ekle</a>
+        <a asp-controller="Team" asp-action="CreateTeam" class="btn btn-pl">+ Takım Ekle</a>
+        <a asp-controller="Referee" asp-action="CreateReferee" class="btn btn-pl">+ Hakem Ekle</a>
+        <a asp-controller="Season" asp-action="CreateSeason" class="btn btn-pl">+ Sezon Ekle</a>
+        <a asp-controller="Stadium" asp-action="CreateStadium" class="btn btn-pl">+ Stadyum Ekle</a>
+        <a asp-controller="GameWeek" asp-action="CreateGameWeek" class="btn btn-pl">+ Hafta Ekle</a>
+    </div>
+</div>
+
+<!-- SON MAÇLAR -->
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 style="font-weight:700;color:#38003c;margin:0;">Son Maçlar</h6>
+        <a asp-controller="Match" asp-action="MatchList" style="font-size:0.8rem;color:#38003c;">Tümünü Gör →</a>
+    </div>
+    <div id="recent-matches-admin">Yükleniyor...</div>
+</div>
+
+@section Scripts {
+    <script>
+        fetch('http://localhost:7146/api/Team').then(r=>r.json()).then(d=>{
+            document.getElementById('stat-teams').textContent = d.length;
+        });
+
+        fetch('http://localhost:7146/api/Match').then(r=>r.json()).then(data=>{
+            document.getElementById('stat-matches').textContent = data.length;
+            document.getElementById('stat-finished').textContent = data.filter(m=>m.status==='Finished').length;
+            document.getElementById('stat-upcoming').textContent = data.filter(m=>m.status==='NotPlayed').length;
+
+            const recent = data.filter(m=>m.status==='Finished').slice(-5).reverse();
+            if(recent.length === 0) {
+                document.getElementById('recent-matches-admin').innerHTML = '<p class="text-muted">Henüz tamamlanan maç yok.</p>';
+                return;
+            }
+            let html = '<table class="table mb-0"><thead><tr><th>Ev Sahibi</th><th>Skor</th><th>Deplasman</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>';
+            recent.forEach(m => {
+                html += `<tr>
+                    <td><strong>${m.homeTeamName}</strong></td>
+                    <td><strong>${m.homeScore} - ${m.awayScore}</strong></td>
+                    <td><strong>${m.awayTeamName}</strong></td>
+                    <td><span class="badge" style="background:#dcfce7;color:#16a34a;">Bitti</span></td>
+                    <td>
+                        <a href="/Match/UpdateMatch/${m.matchId}" class="btn btn-sm btn-outline-secondary me-1">Düzenle</a>
+                        <a href="/MatchEvent/MatchEventList?matchId=${m.matchId}" class="btn btn-sm" style="background:#38003c;color:#00ff85;">Olaylar</a>
+                    </td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('recent-matches-admin').innerHTML = html;
+        });
+    </script>
+}

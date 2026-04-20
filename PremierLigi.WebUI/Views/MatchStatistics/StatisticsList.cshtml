@@ -1,0 +1,45 @@
+﻿@model List<PremierLigi.WebUI.Dtos.MatchStatisticsDtos.ResultMatchStatisticsDto>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "İstatistikler";
+}
+
+<div class="admin-header">
+    <h2>İstatistikler</h2>
+</div>
+
+<div class="admin-card">
+    <table class="table mb-0">
+        <thead>
+            <tr>
+                <th>Maç ID</th>
+                <th>Ev İlk Yarı</th>
+                <th>Ev İkinci Yarı</th>
+                <th>Dep İlk Yarı</th>
+                <th>Dep İkinci Yarı</th>
+                <th>Top Hakimiyeti</th>
+                <th>Şut</th>
+                <th>Korner</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MatchId</td>
+                    <td>@item.HomeFirstHalfGoals</td>
+                    <td>@item.HomeSecondHalfGoals</td>
+                    <td>@item.AwayFirstHalfGoals</td>
+                    <td>@item.AwaySecondHalfGoals</td>
+                    <td>@item.HomePossession% - @item.AwayPossession%</td>
+                    <td>@item.HomeShots - @item.AwayShots</td>
+                    <td>@item.HomeCorners - @item.AwayCorners</td>
+                    <td>
+                        <a href="/MatchStatistics/StatisticsDetail?matchId=@item.MatchId" class="btn btn-sm btn-pl">Detay</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

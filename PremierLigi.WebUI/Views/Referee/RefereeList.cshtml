@@ -1,0 +1,32 @@
+﻿@model List<PremierLigi.WebUI.Dtos.RefereeDtos.ResultRefereeDto>
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Hakem Listesi</h3>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Uyruk</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.RefereeId</td>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.Nationality</td>
+                <td><a href="/Referee/DeleteReferee/@item.RefereeId" class="btn btn-danger btn-sm">Sil</a></td>
+                <td><a href="/Referee/UpdateReferee/@item.RefereeId" class="btn btn-success btn-sm">Güncelle</a></td>
+            </tr>
+        }
+    </table>
+    <a href="/Referee/CreateReferee" class="btn btn-info">Yeni Hakem Ekle</a>
+</div>

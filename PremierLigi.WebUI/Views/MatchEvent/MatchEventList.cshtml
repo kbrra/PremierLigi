@@ -1,0 +1,53 @@
+﻿@model List<PremierLigi.WebUI.Dtos.MatchEventDtos.ResultMatchEventDto>
+@{
+    Layout = null;
+    int matchId = ViewBag.MatchId;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Maç Olayları</h3>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>Dakika</th>
+            <th>Olay Tipi</th>
+            <th>Açıklama</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Minute'</td>
+                <td>
+                    @if (item.ActionType == "Goal")
+                    {
+                        <span class="badge bg-success">⚽ Gol</span>
+                    }
+                    else if (item.ActionType == "YellowCard")
+                    {
+                        <span class="badge bg-warning text-dark">🟨 Sarı Kart</span>
+                    }
+                    else if (item.ActionType == "RedCard")
+                    {
+                        <span class="badge bg-danger">🟥 Kırmızı Kart</span>
+                    }
+                    else if (item.ActionType == "Substitution")
+                    {
+                        <span class="badge bg-info">🔄 Değişiklik</span>
+                    }
+                    else
+                    {
+                        @item.ActionType
+                    }
+                </td>
+                <td>@item.Description</td>
+                <td><a href="/MatchEvent/DeleteMatchEvent?id=@item.MatchEventId&matchId=@matchId" class="btn btn-danger btn-sm">Sil</a></td>
+                <td><a href="/MatchEvent/UpdateMatchEvent/@item.MatchEventId" class="btn btn-success btn-sm">Güncelle</a></td>
+            </tr>
+        }
+    </table>
+    <a href="/MatchEvent/CreateMatchEvent?matchId=@matchId" class="btn btn-info">Yeni Olay Ekle</a>
+    <a href="/Match/MatchList" class="btn btn-secondary ms-2">Fikstüre Dön</a>
+</div>

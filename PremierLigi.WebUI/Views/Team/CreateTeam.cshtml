@@ -1,0 +1,39 @@
+﻿@model PremierLigi.WebUI.Dtos.TeamDtos.CreateTeamDto
+@{
+    Layout = null;
+    var stadiums = ViewBag.Stadiums as List<PremierLigi.WebUI.Dtos.StadiumDtos.ResultStadiumDto>;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Yeni Takım Ekle</h3>
+    <br />
+    <form method="post" action="/Team/CreateTeam">
+        <div class="mb-3">
+            <label>Takım Adı</label>
+            <input type="text" name="TeamName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Şehir</label>
+            <input type="text" name="City" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Stadyum</label>
+            <select name="StadiumId" class="form-control">
+                @if (stadiums != null)
+                {
+                    foreach (var stadium in stadiums)
+                    {
+                        <option value="@stadium.StadiumId">@stadium.StadiumName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Logo URL</label>
+            <input type="text" name="LogoUrl" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a href="/Team/TeamList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

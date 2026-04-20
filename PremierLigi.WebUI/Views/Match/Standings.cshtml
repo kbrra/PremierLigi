@@ -1,0 +1,62 @@
+﻿@model List<dynamic>
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Puan Durumu</h3>
+    <br />
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>#</th>
+            <th>Takım</th>
+            <th>O</th>
+            <th>G</th>
+            <th>B</th>
+            <th>M</th>
+            <th>AG</th>
+            <th>YG</th>
+            <th>A</th>
+            <th>P</th>
+            <th>Son 5</th>
+        </tr>
+        @{
+            int rank = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@rank</td>
+                <td><strong>@item.teamName</strong></td>
+                <td>@item.played</td>
+                <td>@item.won</td>
+                <td>@item.drawn</td>
+                <td>@item.lost</td>
+                <td>@item.goalsFor</td>
+                <td>@item.goalsAgainst</td>
+                <td>@item.goalDifference</td>
+                <td><strong>@item.points</strong></td>
+                <td>
+                    @foreach (var result in item.last5)
+                    {
+                        if (result == "W")
+                        {
+                            <span class="badge bg-success">G</span>
+                        }
+                        else if (result == "D")
+                        {
+                            <span class="badge bg-warning text-dark">B</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">M</span>
+                        }
+                    }
+                </td>
+            </tr>
+            rank++;
+        }
+    </table>
+    <a href="/Match/MatchList" class="btn btn-secondary">Fikstüre Dön</a>
+</div>

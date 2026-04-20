@@ -1,0 +1,64 @@
+﻿@model PremierLigi.WebUI.Dtos.MatchStatisticsDtos.GetByIdMatchStatisticsDto
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Maç İstatistiği Güncelle</h3>
+    <br />
+    <form method="post" action="/MatchStatistics/UpdateStatistics">
+        <input type="hidden" name="MatchStatisticsId" value="@Model.MatchStatisticsId" />
+        <input type="hidden" name="MatchId" value="@Model.MatchId" />
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Ev Sahibi</h5>
+                <div class="mb-3">
+                    <label>İlk Yarı Golleri</label>
+                    <input type="number" name="HomeFirstHalfGoals" value="@Model.HomeFirstHalfGoals" class="form-control" min="0" />
+                </div>
+                <div class="mb-3">
+                    <label>İkinci Yarı Golleri</label>
+                    <input type="number" name="HomeSecondHalfGoals" value="@Model.HomeSecondHalfGoals" class="form-control" min="0" />
+                </div>
+                <div class="mb-3">
+                    <label>Top Hakimiyeti (%)</label>
+                    <input type="number" name="HomePossession" value="@Model.HomePossession" class="form-control" min="0" max="100" />
+                </div>
+                <div class="mb-3">
+                    <label>Şut</label>
+                    <input type="number" name="HomeShots" value="@Model.HomeShots" class="form-control" min="0" />
+                </div>
+                <div class="mb-3">
+                    <label>Korner</label>
+                    <input type="number" name="HomeCorners" value="@Model.HomeCorners" class="form-control" min="0" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h5>Deplasman</h5>
+                <div class="mb-3">
+                    <label>İlk Yarı Golleri</label>
+                    <input type="number" name="AwayFirstHalfGoals" value="@Model.AwayFirstHalfGoals" class="form-control" min="0" />
+                </div>
+                <div class="mb-3">
+                    <label>İkinci Yarı Golleri</label>
+                    <input type="number" name="AwaySecondHalfGoals" value="@Model.AwaySecondHalfGoals" class="form-control" min="0" />
+                </div>
+                <div class="mb-3">
+                    <label>Top Hakimiyeti (%)</label>
+                    <input type="number" name="AwayPossession" value="@Model.AwayPossession" class="form-control" min="0" max="100" />
+                </div>
+                <div class="mb-3">
+                    <label>Şut</label>
+                    <input type="number" name="AwayShots" value="@Model.AwayShots" class="form-control" min="0" />
+                </div>
+                <div class="mb-3">
+                    <label>Korner</label>
+                    <input type="number" name="AwayCorners" value="@Model.AwayCorners" class="form-control" min="0" />
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a href="/Match/MatchList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

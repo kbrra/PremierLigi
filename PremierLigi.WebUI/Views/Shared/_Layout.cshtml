@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Premier Ligi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        :root {
+            --pl-purple: #38003c;
+            --pl-green: #00ff85;
+            --pl-white: #ffffff;
+            --pl-gray: #f0f0f0;
+            --pl-dark: #1a1a2e;
+            --pl-card: #ffffff;
+            --pl-text: #1a1a1a;
+            --pl-muted: #6b7280;
+            --pl-border: #e5e7eb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f8f8;
+            color: var(--pl-text);
+        }
+
+        /* NAVBAR */
+        .pl-navbar {
+            background: var(--pl-purple);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        .pl-navbar .container {
+            display: flex;
+            align-items: center;
+            height: 64px;
+            gap: 40px;
+        }
+
+        .pl-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            color: var(--pl-green);
+            text-decoration: none;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .pl-logo:hover { color: var(--pl-green); text-decoration: none; }
+
+        .pl-logo .lion { font-size: 1.4rem; }
+
+        .pl-nav-links {
+            display: flex;
+            list-style: none;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .pl-nav-links a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .pl-nav-links a:hover,
+        .pl-nav-links a.active {
+            color: var(--pl-green);
+            background: rgba(0,255,133,0.08);
+        }
+
+        .pl-admin-btn {
+            background: var(--pl-green);
+            color: var(--pl-purple) !important;
+            font-weight: 700 !important;
+            padding: 8px 18px !important;
+            border-radius: 20px !important;
+        }
+
+        .pl-admin-btn:hover {
+            background: #00cc6a !important;
+            color: var(--pl-purple) !important;
+        }
+
+        /* SEASON BANNER */
+        .pl-season-bar {
+            background: var(--pl-green);
+            text-align: center;
+            padding: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--pl-purple);
+            text-transform: uppercase;
+        }
+
+        /* HERO */
+        .pl-hero {
+            background: linear-gradient(135deg, var(--pl-purple) 0%, #1a0020 60%, #0d001a 100%);
+            padding: 60px 0 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pl-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,255,133,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .pl-hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: white;
+            letter-spacing: 3px;
+            line-height: 1;
+        }
+
+        .pl-hero h1 span { color: var(--pl-green); }
+
+        .pl-hero p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            margin-top: 10px;
+        }
+
+        /* SECTION HEADERS */
+        .pl-section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            color: var(--pl-purple);
+            border-left: 4px solid var(--pl-green);
+            padding-left: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* STANDINGS TABLE */
+        .pl-standings {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .pl-standings table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .pl-standings thead {
+            background: var(--pl-purple);
+            color: white;
+        }
+
+        .pl-standings thead th {
+            padding: 12px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .pl-standings tbody tr {
+            border-bottom: 1px solid var(--pl-border);
+            transition: background 0.15s;
+        }
+
+        .pl-standings tbody tr:hover { background: #f9fafb; }
+
+        .pl-standings tbody td {
+            padding: 12px 10px;
+            vertical-align: middle;
+        }
+
+        .pl-standings .rank {
+            font-weight: 700;
+            color: var(--pl-muted);
+            width: 32px;
+        }
+
+        .pl-standings .team-name {
+            font-weight: 600;
+            color: var(--pl-text);
+        }
+
+        .pl-standings .points {
+            font-weight: 700;
+            color: var(--pl-purple);
+            font-size: 1rem;
+        }
+
+        .pl-rank-cl { border-left: 3px solid #1e90ff; }
+        .pl-rank-el { border-left: 3px solid #ff8c00; }
+        .pl-rank-rel { border-left: 3px solid #dc2626; }
+
+        /* FORM BADGES */
+        .form-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin: 1px;
+        }
+        .form-w { background: #dcfce7; color: #16a34a; }
+        .form-d { background: #fef9c3; color: #ca8a04; }
+        .form-l { background: #fee2e2; color: #dc2626; }
+
+        /* MATCH CARDS */
+        .pl-match-card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .pl-match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .pl-match-team {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .pl-match-team.away {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        .pl-match-score {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .pl-score-box {
+            background: var(--pl-purple);
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            padding: 6px 14px;
+            border-radius: 6px;
+        }
+
+        .pl-score-upcoming {
+            background: var(--pl-gray);
+            color: var(--pl-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .pl-status-live {
+            background: #dc2626;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @@keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .pl-status-finished {
+            color: var(--pl-muted);
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .pl-gameweek-header {
+            background: var(--pl-purple);
+            color: var(--pl-green);
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 2px;
+            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: -1px;
+        }
+
+        /* TEAM LOGO PLACEHOLDER */
+        .team-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--pl-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pl-green);
+            font-weight: 700;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        /* FOOTER */
+        .pl-footer {
+            background: var(--pl-purple);
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+            font-size: 0.8rem;
+        }
+
+        .pl-footer span { color: var(--pl-green); }
+
+        /* ADMIN LAYOUT */
+        .admin-sidebar {
+            background: var(--pl-purple);
+            min-height: 100vh;
+            width: 240px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 0;
+            z-index: 100;
+        }
+
+        .admin-content {
+            margin-left: 240px;
+            padding: 30px;
+            min-height: 100vh;
+            background: #f3f4f6;
+        }
+
+        /* CARDS */
+        .pl-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="pl-season-bar">2025/26 Premier Ligi Sezonu</div>
+
+    <nav class="pl-navbar">
+        <div class="container">
+            <a class="pl-logo" asp-controller="Home" asp-action="Index">
+                <span class="lion">⚽</span> Premier Ligi
+            </a>
+            <ul class="pl-nav-links">
+                <li><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li><a asp-controller="Home" asp-action="Standings">Puan Durumu</a></li>
+                <li><a asp-controller="Home" asp-action="Fixtures">Fikstür</a></li>
+                <li><a asp-controller="Home" asp-action="Teams">Takımlar</a></li>
+                <li><a asp-controller="Admin" asp-action="Index" class="pl-admin-btn">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+    <footer class="pl-footer">
+        <p>⚽ <span>Premier Ligi</span> Yönetim Sistemi &copy; 2025/26</p>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

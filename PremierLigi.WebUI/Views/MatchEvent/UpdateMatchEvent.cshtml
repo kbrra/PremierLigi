@@ -1,0 +1,57 @@
+﻿@model PremierLigi.WebUI.Dtos.MatchEventDtos.GetByIdMatchEventDto
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Maç Olayı Güncelle</h3>
+    <br />
+    <form method="post" action="/MatchEvent/UpdateMatchEvent">
+        <input type="hidden" name="MatchEventId" value="@Model.MatchEventId" />
+        <input type="hidden" name="MatchId" value="@Model.MatchId" />
+        <div class="mb-3">
+            <label>Olay Tipi</label>
+            <select name="ActionType" class="form-control">
+                @if (Model.ActionType == "Goal")
+                {
+                    <option value="Goal" selected>⚽ Gol</option>
+                    <option value="YellowCard">🟨 Sarı Kart</option>
+                    <option value="RedCard">🟥 Kırmızı Kart</option>
+                    <option value="Substitution">🔄 Değişiklik</option>
+                }
+                else if (Model.ActionType == "YellowCard")
+                {
+                    <option value="Goal">⚽ Gol</option>
+                    <option value="YellowCard" selected>🟨 Sarı Kart</option>
+                    <option value="RedCard">🟥 Kırmızı Kart</option>
+                    <option value="Substitution">🔄 Değişiklik</option>
+                }
+                else if (Model.ActionType == "RedCard")
+                {
+                    <option value="Goal">⚽ Gol</option>
+                    <option value="YellowCard">🟨 Sarı Kart</option>
+                    <option value="RedCard" selected>🟥 Kırmızı Kart</option>
+                    <option value="Substitution">🔄 Değişiklik</option>
+                }
+                else
+                {
+                    <option value="Goal">⚽ Gol</option>
+                    <option value="YellowCard">🟨 Sarı Kart</option>
+                    <option value="RedCard">🟥 Kırmızı Kart</option>
+                    <option value="Substitution" selected>🔄 Değişiklik</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Açıklama</label>
+            <input type="text" name="Description" value="@Model.Description" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Dakika</label>
+            <input type="number" name="Minute" value="@Model.Minute" class="form-control" min="1" max="120" />
+        </div>
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a href="/MatchEvent/MatchEventList?matchId=@Model.MatchId" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

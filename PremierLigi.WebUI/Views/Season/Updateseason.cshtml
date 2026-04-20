@@ -1,0 +1,42 @@
+﻿@model PremierLigi.WebUI.Dtos.SeasonDtos.GetByIdSeasonDto
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Sezon Güncelle</h3>
+    <br />
+    <form method="post" action="/Season/UpdateSeason">
+        <input type="hidden" name="SeasonId" value="@Model.SeasonId" />
+        <div class="mb-3">
+            <label>Sezon Adı</label>
+            <input type="text" name="SeasonName" value="@Model.SeasonName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Başlangıç Tarihi</label>
+            <input type="date" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Bitiş Tarihi</label>
+            <input type="date" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Aktif mi?</label>
+            <select name="IsActive" class="form-control">
+                @if (Model.IsActive)
+                {
+                    <option value="true" selected>Evet</option>
+                    <option value="false">Hayır</option>
+                }
+                else
+                {
+                    <option value="true">Evet</option>
+                    <option value="false" selected>Hayır</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a href="/Season/SeasonList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

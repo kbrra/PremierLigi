@@ -1,0 +1,149 @@
+﻿@model PremierLigi.WebUI.Dtos.MatchDtos.GetByIdMatchDto
+@{
+    Layout = null;
+    var teams = ViewBag.Teams as List<PremierLigi.WebUI.Dtos.TeamDtos.ResultTeamDto>;
+    var seasons = ViewBag.Seasons as List<PremierLigi.WebUI.Dtos.SeasonDtos.ResultSeasonDto>;
+    var gameWeeks = ViewBag.GameWeeks as List<PremierLigi.WebUI.Dtos.GameWeekDtos.ResultGameWeekDto>;
+    var referees = ViewBag.Referees as List<PremierLigi.WebUI.Dtos.RefereeDtos.ResultRefereeDto>;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Maç Güncelle</h3>
+    <br />
+    <form method="post" action="/Match/UpdateMatch">
+        <input type="hidden" name="MatchId" value="@Model.MatchId" />
+        <div class="mb-3">
+            <label>Ev Sahibi Takım</label>
+            <select name="HomeTeamId" class="form-control">
+                @if (teams != null)
+                {
+                    foreach (var team in teams)
+                    {
+                        if (team.TeamId == Model.HomeTeamId)
+                        {
+                            <option value="@team.TeamId" selected>@team.TeamName</option>
+                        }
+                        else
+                        {
+                            <option value="@team.TeamId">@team.TeamName</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Deplasman Takımı</label>
+            <select name="AwayTeamId" class="form-control">
+                @if (teams != null)
+                {
+                    foreach (var team in teams)
+                    {
+                        if (team.TeamId == Model.AwayTeamId)
+                        {
+                            <option value="@team.TeamId" selected>@team.TeamName</option>
+                        }
+                        else
+                        {
+                            <option value="@team.TeamId">@team.TeamName</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Sezon</label>
+            <select name="SeasonId" class="form-control">
+                @if (seasons != null)
+                {
+                    foreach (var season in seasons)
+                    {
+                        if (season.SeasonId == Model.SeasonId)
+                        {
+                            <option value="@season.SeasonId" selected>@season.SeasonName</option>
+                        }
+                        else
+                        {
+                            <option value="@season.SeasonId">@season.SeasonName</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Maç Haftası</label>
+            <select name="GameWeekId" class="form-control">
+                @if (gameWeeks != null)
+                {
+                    foreach (var gw in gameWeeks)
+                    {
+                        if (gw.GameWeekId == Model.GameWeekId)
+                        {
+                            <option value="@gw.GameWeekId" selected>@gw.WeekNumber. Hafta</option>
+                        }
+                        else
+                        {
+                            <option value="@gw.GameWeekId">@gw.WeekNumber. Hafta</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Hakem</label>
+            <select name="RefereeId" class="form-control">
+                @if (referees != null)
+                {
+                    foreach (var referee in referees)
+                    {
+                        if (referee.RefereeId == Model.RefereeId)
+                        {
+                            <option value="@referee.RefereeId" selected>@referee.FirstName @referee.LastName</option>
+                        }
+                        else
+                        {
+                            <option value="@referee.RefereeId">@referee.FirstName @referee.LastName</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Maç Tarihi</label>
+            <input type="datetime-local" name="MatchDate" value="@Model.MatchDate.ToString("yyyy-MM-ddTHH:mm")" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Durum</label>
+            <select name="Status" class="form-control">
+                @if (Model.Status == "NotPlayed")
+                {
+                    <option value="NotPlayed" selected>Oynanmadı</option>
+                    <option value="Ongoing">Devam Ediyor</option>
+                    <option value="Finished">Bitti</option>
+                }
+                else if (Model.Status == "Ongoing")
+                {
+                    <option value="NotPlayed">Oynanmadı</option>
+                    <option value="Ongoing" selected>Devam Ediyor</option>
+                    <option value="Finished">Bitti</option>
+                }
+                else
+                {
+                    <option value="NotPlayed">Oynanmadı</option>
+                    <option value="Ongoing">Devam Ediyor</option>
+                    <option value="Finished" selected>Bitti</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Ev Sahibi Skoru</label>
+            <input type="number" name="HomeScore" value="@Model.HomeScore" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Deplasman Skoru</label>
+            <input type="number" name="AwayScore" value="@Model.AwayScore" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a href="/Match/MatchList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

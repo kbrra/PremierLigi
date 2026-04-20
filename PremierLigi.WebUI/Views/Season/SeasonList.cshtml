@@ -1,0 +1,43 @@
+﻿@model List<PremierLigi.WebUI.Dtos.SeasonDtos.ResultSeasonDto>
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Sezon Listesi</h3>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Sezon Adı</th>
+            <th>Başlangıç</th>
+            <th>Bitiş</th>
+            <th>Aktif</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SeasonId</td>
+                <td>@item.SeasonName</td>
+                <td>@item.StartDate.ToString("dd.MM.yyyy")</td>
+                <td>@item.EndDate.ToString("dd.MM.yyyy")</td>
+                <td>
+                    @if (item.IsActive)
+                    {
+                        <span class="badge bg-success">Aktif</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Pasif</span>
+                    }
+                </td>
+                <td><a href="/Season/DeleteSeason/@item.SeasonId" class="btn btn-danger btn-sm">Sil</a></td>
+                <td><a href="/Season/UpdateSeason/@item.SeasonId" class="btn btn-success btn-sm">Güncelle</a></td>
+            </tr>
+        }
+    </table>
+    <a href="/Season/CreateSeason" class="btn btn-info">Yeni Sezon Ekle</a>
+</div>

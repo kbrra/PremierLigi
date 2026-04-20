@@ -1,0 +1,33 @@
+﻿@model PremierLigi.WebUI.Dtos.SeasonDtos.CreateSeasonDto
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Yeni Sezon Ekle</h3>
+    <br />
+    <form method="post" action="/Season/CreateSeason">
+        <div class="mb-3">
+            <label>Sezon Adı</label>
+            <input type="text" name="SeasonName" class="form-control" placeholder="Örn: 2024/25" />
+        </div>
+        <div class="mb-3">
+            <label>Başlangıç Tarihi</label>
+            <input type="date" name="StartDate" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Bitiş Tarihi</label>
+            <input type="date" name="EndDate" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Aktif mi?</label>
+            <select name="IsActive" class="form-control">
+                <option value="true">Evet</option>
+                <option value="false">Hayır</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a href="/Season/SeasonList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

@@ -1,0 +1,32 @@
+﻿@model List<PremierLigi.WebUI.Dtos.TeamDtos.ResultTeamDto>
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Takım Listesi</h3>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Takım Adı</th>
+            <th>Şehir</th>
+            <th>Logo URL</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TeamId</td>
+                <td>@item.TeamName</td>
+                <td>@item.City</td>
+                <td>@item.LogoUrl</td>
+                <td><a href="/Team/DeleteTeam/@item.TeamId" class="btn btn-danger btn-sm">Sil</a></td>
+                <td><a href="/Team/UpdateTeam/@item.TeamId" class="btn btn-success btn-sm">Güncelle</a></td>
+            </tr>
+        }
+    </table>
+    <a href="/Team/CreateTeam" class="btn btn-info">Yeni Takım Ekle</a>
+</div>

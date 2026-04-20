@@ -1,0 +1,26 @@
+﻿@model PremierLigi.WebUI.Dtos.RefereeDtos.CreateRefereeDto
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Yeni Hakem Ekle</h3>
+    <br />
+    <form method="post" action="/Referee/CreateReferee">
+        <div class="mb-3">
+            <label>Ad</label>
+            <input type="text" name="FirstName" class="form-control" placeholder="Örn: Michael" />
+        </div>
+        <div class="mb-3">
+            <label>Soyad</label>
+            <input type="text" name="LastName" class="form-control" placeholder="Örn: Oliver" />
+        </div>
+        <div class="mb-3">
+            <label>Uyruk</label>
+            <input type="text" name="Nationality" class="form-control" placeholder="Örn: İngiliz" />
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a href="/Referee/RefereeList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

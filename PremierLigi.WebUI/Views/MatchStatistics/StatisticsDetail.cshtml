@@ -1,0 +1,53 @@
+﻿@model PremierLigi.WebUI.Dtos.MatchStatisticsDtos.ResultMatchStatisticsDto
+@{
+    Layout = null;
+    int matchId = ViewBag.MatchId;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Maç İstatistikleri</h3>
+    <br />
+    @if (Model == null)
+    {
+        <div class="alert alert-warning">Bu maça ait istatistik bulunamadı.</div>
+        <a href="/MatchStatistics/CreateStatistics?matchId=@matchId" class="btn btn-info">İstatistik Ekle</a>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <tr>
+                <th>İstatistik</th>
+                <th>Ev Sahibi</th>
+                <th>Deplasman</th>
+            </tr>
+            <tr>
+                <td>İlk Yarı Golleri</td>
+                <td>@Model.HomeFirstHalfGoals</td>
+                <td>@Model.AwayFirstHalfGoals</td>
+            </tr>
+            <tr>
+                <td>İkinci Yarı Golleri</td>
+                <td>@Model.HomeSecondHalfGoals</td>
+                <td>@Model.AwaySecondHalfGoals</td>
+            </tr>
+            <tr>
+                <td>Top Hakimiyeti (%)</td>
+                <td>@Model.HomePossession</td>
+                <td>@Model.AwayPossession</td>
+            </tr>
+            <tr>
+                <td>Şut</td>
+                <td>@Model.HomeShots</td>
+                <td>@Model.AwayShots</td>
+            </tr>
+            <tr>
+                <td>Korner</td>
+                <td>@Model.HomeCorners</td>
+                <td>@Model.AwayCorners</td>
+            </tr>
+        </table>
+        <a href="/MatchStatistics/UpdateStatistics/@Model.MatchStatisticsId" class="btn btn-success">Güncelle</a>
+    }
+    <a href="/Match/MatchList" class="btn btn-secondary ms-2">Fikstüre Dön</a>
+</div>

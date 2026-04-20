@@ -1,0 +1,39 @@
+﻿@model PremierLigi.WebUI.Dtos.GameWeekDtos.CreateGameWeekDto
+@{
+    Layout = null;
+    var seasons = ViewBag.Seasons as List<PremierLigi.WebUI.Dtos.SeasonDtos.ResultSeasonDto>;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Yeni Maç Haftası Ekle</h3>
+    <br />
+    <form method="post" action="/GameWeek/CreateGameWeek">
+        <div class="mb-3">
+            <label>Hafta Numarası</label>
+            <input type="number" name="WeekNumber" class="form-control" min="1" max="38" />
+        </div>
+        <div class="mb-3">
+            <label>Sezon</label>
+            <select name="SeasonId" class="form-control">
+                @if (seasons != null)
+                {
+                    foreach (var season in seasons)
+                    {
+                        <option value="@season.SeasonId">@season.SeasonName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Başlangıç Tarihi</label>
+            <input type="date" name="StartDate" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Bitiş Tarihi</label>
+            <input type="date" name="EndDate" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a href="/GameWeek/GameWeekList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

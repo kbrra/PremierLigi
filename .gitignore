@@ -1,0 +1,25 @@
+# appsettings - connection string gizli kalacak
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
+# appsettings örnek dosyasý GitHub'a gidecek (içi boþ)
+!appsettings.example.json
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build
+bin/
+obj/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

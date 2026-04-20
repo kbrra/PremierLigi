@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Puan Durumu";
+}
+
+<div class="pl-hero" style="padding:40px 0;">
+    <div class="container">
+        <h1 style="font-family:'Bebas Neue',sans-serif; font-size:2.5rem; color:white; letter-spacing:3px;">
+            Puan <span style="color:#00ff85;">Durumu</span>
+        </h1>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">2025/26 Sezonu</p>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="pl-card">
+        <div id="standings-full">
+            <div class="text-center py-4 text-muted">Yükleniyor...</div>
+        </div>
+    </div>
+    <div style="font-size:0.75rem; color:#6b7280; padding:10px 0;">
+        <span style="border-left:3px solid #1e90ff;padding-left:6px;margin-right:16px;">Şampiyonlar Ligi (İlk 4)</span>
+        <span style="border-left:3px solid #ff8c00;padding-left:6px;margin-right:16px;">Avrupa Ligi (5.)</span>
+        <span style="border-left:3px solid #dc2626;padding-left:6px;">Düşme Hattı (Son 3)</span>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let teamLogos = {};
+
+        function teamLogo(name) {
+            const url = teamLogos[name];
+            if (url) return `<img src="${url}" style="width:28px;height:28px;object-fit:contain;" onerror="this.style.display='none'">`;
+            return `<div class="team-logo" style="width:28px;height:28px;font-size:0.6rem;">${name.split(' ').map(w=>w[0]).join('').substring(0,3).toUpperCase()}</div>`;
+        }
+
+        function formBadge(r) {
+            if(r==='W') return '<span class="form-badge form-w">G</span>';
+            if(r==='D') return '<span class="form-badge form-d">B</span>';
+            return '<span class="form-badge form-l">M</span>';
+        }
+
+        fetch('http://localhost:7146/api/Team')
+            .then(r => r.json())
+            .then(teams => {
+                teams.forEach(t => { teamLogos[t.teamName] = t.logoUrl; });
+
+                fetch('http://localhost:7146/api/Match/Standings')
+                    .then(r => r.json())
+                    .then(data => {
+                        const total = data.length;
+                        let html = `<div class="pl-standings"><table>
+                            <thead><tr>
+                                <th>#</th><th>Takım</th>
+                                <th title="Oynadığı">O</th><th title="Galibiyet">G</th>
+                                <th title="Beraberlik">B</th><th title="Mağlubiyet">M</th>
+                                <th title="Attığı Gol">AG</th><th title="Yediği Gol">YG</th>
+                                <th title="Averaj">Av</th><th title="Puan">P</th>
+                                <th>Son 5</th>
+                            </tr></thead><tbody>`;
+
+                        data.forEach((t, i) => {
+                            let rankClass = i < 4 ? 'pl-rank-cl' : i === 4 ? 'pl-rank-el' : i >= total-3 ? 'pl-rank-rel' : '';
+                            let form = (t.last5||[]).map(formBadge).join('');
+                            html += `<tr class="${rankClass}">
+                                <td class="rank">${i+1}</td>
+                                <td><div class="d-flex align-items-center gap-2">
+                                    ${teamLogo(t.teamName)}
+                                    <span class="team-name">${t.teamName}</span>
+                                </div></td>
+                                <td>${t.played}</td><td>${t.won}</td><td>${t.drawn}</td><td>${t.lost}</td>
+                                <td>${t.goalsFor}</td><td>${t.goalsAgainst}</td>
+                                <td>${t.goalDifference>0?'+':''}${t.goalDifference}</td>
+                                <td class="points">${t.points}</td>
+                                <td>${form}</td>
+                            </tr>`;
+                        });
+                        html += `</tbody></table></div>`;
+                        document.getElementById('standings-full').innerHTML = html;
+                    });
+            });
+    </script>
+}

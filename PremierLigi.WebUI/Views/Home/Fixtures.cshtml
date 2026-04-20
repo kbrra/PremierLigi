@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "Fikstür";
+}
+
+<div class="pl-hero" style="padding:40px 0;">
+    <div class="container">
+        <h1 style="font-family:'Bebas Neue',sans-serif; font-size:2.5rem; color:white; letter-spacing:3px;">
+            Fik<span style="color:#00ff85;">stür</span>
+        </h1>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">2024/25 Sezonu · Tüm Maçlar</p>
+    </div>
+</div>
+
+<div class="container mt-4">
+
+    <div class="d-flex gap-2 mb-4 flex-wrap">
+        <button class="btn btn-sm filter-btn active" data-filter="all"
+                style="background:#38003c; color:#00ff85; border:none; border-radius:20px; padding:6px 16px;">
+            Tümü
+        </button>
+        <button class="btn btn-sm filter-btn" data-filter="Finished">Tamamlanan</button>
+        <button class="btn btn-sm filter-btn" data-filter="Ongoing">🔴 Canlı</button>
+        <button class="btn btn-sm filter-btn" data-filter="NotPlayed">Yaklaşan</button>
+    </div>
+
+    <div id="fixtures-container">
+        <div class="text-center py-5 text-muted">Yükleniyor...</div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        let allMatches = [];
+        let teamLogos = {};
+
+        // 🔥 LOGO sistemi (Standings ile aynı mantık)
+        function teamLogo(name) {
+            const url = teamLogos[name];
+
+            if (url) {
+                return `<img src="${url}" style="width:28px;height:28px;object-fit:contain;" />`;
+            }
+
+            return `<div class="team-logo" style="width:28px;height:28px;font-size:0.6rem;">
+                ${name.split(' ').map(w => w[0]).join('').substring(0,3).toUpperCase()}
+            </div>`;
+        }
+
+        function renderMatches(matches) {
+
+            if(matches.length === 0) {
+                document.getElementById('fixtures-container').innerHTML =
+                    '<p class="text-center text-muted py-5">Maç bulunamadı.</p>';
+                return;
+            }
+
+            const grouped = {};
+
+            matches.forEach(m => {
+                const key = 'Hafta ' + (m.gameWeekId || '?');
+                if(!grouped[key]) grouped[key] = [];
+                grouped[key].push(m);
+            });
+
+            let html = '';
+
+            Object.entries(grouped).forEach(([week, wMatches]) => {
+
+                html += `<div class="pl-gameweek-header">${week}</div>`;
+
+                wMatches.forEach(m => {
+
+                    let scoreHtml = '';
+
+                    if(m.status === 'Finished') {
+                        scoreHtml = `<div class="pl-score-box">${m.homeScore} - ${m.awayScore}</div>
+                                     <div class="pl-status-finished mt-1">Bitti</div>`;
+                    }
+                    else if(m.status === 'Ongoing') {
+                        scoreHtml = `<div class="pl-score-box">${m.homeScore ?? 0} - ${m.awayScore ?? 0}</div>
+                                     <div class="pl-status-live mt-1">CANLI</div>`;
+                    }
+                    else {
+                        let d = new Date(m.matchDate);
+                        scoreHtml = `<div class="pl-score-upcoming">
+                            ${d.toLocaleDateString('tr-TR',{day:'2-digit',month:'short'})}<br>
+                            ${d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}
+                        </div>`;
+                    }
+
+                    html += `
+                    <a href="/Home/MatchDetail/${m.matchId}" class="pl-match-card">
+                        <div class="pl-match-team">
+                            ${teamLogo(m.homeTeamName)}
+                            <span>${m.homeTeamName}</span>
+                        </div>
+
+                        <div class="pl-match-score">
+                            ${scoreHtml}
+                        </div>
+
+                        <div class="pl-match-team away">
+                            ${teamLogo(m.awayTeamName)}
+                            <span>${m.awayTeamName}</span>
+                        </div>
+                    </a>`;
+                });
+
+                html += `<div style="margin-bottom:16px;"></div>`;
+            });
+
+            document.getElementById('fixtures-container').innerHTML = html;
+        }
+
+        // 🔥 ÖNCE TEAM LOGOS, SONRA MATCHES
+        fetch('http://localhost:7146/api/Team')
+            .then(r => r.json())
+            .then(teams => {
+
+                teams.forEach(t => {
+                    teamLogos[t.teamName] = t.logoUrl;
+                });
+
+                return fetch('http://localhost:7146/api/Match');
+            })
+            .then(r => r.json())
+            .then(data => {
+                allMatches = data;
+                renderMatches(data);
+            });
+
+        // FILTER
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.style.background = '#f0f0f0';
+                    b.style.color = '#333';
+                });
+
+                this.style.background = '#38003c';
+                this.style.color = '#00ff85';
+
+                const filter = this.dataset.filter;
+
+                const filtered = filter === 'all'
+                    ? allMatches
+                    : allMatches.filter(m => m.status === filter);
+
+                renderMatches(filtered);
+            });
+        });
+
+    </script>
+
+}

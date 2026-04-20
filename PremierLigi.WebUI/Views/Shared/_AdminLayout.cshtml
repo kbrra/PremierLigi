@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - @ViewData["Title"]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        :root {
+            --pl-purple: #38003c;
+            --pl-green: #00ff85;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+        }
+
+        .admin-sidebar {
+            background: var(--pl-purple);
+            width: 220px;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .admin-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            color: var(--pl-green);
+            letter-spacing: 2px;
+        }
+
+            .admin-logo small {
+                display: block;
+                font-family: 'Inter', sans-serif;
+                font-size: 0.65rem;
+                color: rgba(255,255,255,0.4);
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                margin-top: 2px;
+            }
+
+        .admin-nav {
+            padding: 16px 0;
+            flex: 1;
+        }
+
+        .admin-nav-section {
+            padding: 6px 20px 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            margin-top: 12px;
+        }
+
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+            .admin-nav a:hover, .admin-nav a.active {
+                background: rgba(0,255,133,0.1);
+                color: var(--pl-green);
+            }
+
+            .admin-nav a .icon {
+                font-size: 1rem;
+                width: 20px;
+            }
+
+        .admin-back {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+            .admin-back a {
+                color: rgba(255,255,255,0.4);
+                font-size: 0.8rem;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+                .admin-back a:hover {
+                    color: white;
+                }
+
+        .admin-content {
+            margin-left: 220px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            margin-bottom: 24px;
+        }
+
+            .admin-header h2 {
+                font-family: 'Bebas Neue', sans-serif;
+                font-size: 1.8rem;
+                color: var(--pl-purple);
+                letter-spacing: 2px;
+                margin: 0;
+            }
+
+            .admin-header p {
+                color: #6b7280;
+                font-size: 0.85rem;
+                margin: 4px 0 0;
+            }
+
+        .admin-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .btn-pl {
+            background: var(--pl-purple);
+            color: var(--pl-green);
+            border: none;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 6px;
+        }
+
+            .btn-pl:hover {
+                background: #2a0030;
+                color: var(--pl-green);
+            }
+
+        table thead {
+            background: var(--pl-purple);
+            color: white;
+        }
+
+            table thead th {
+                padding: 12px;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        table tbody td {
+            padding: 12px;
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            table tbody tr:hover {
+                background: #fafafa;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="admin-sidebar">
+        <div class="admin-logo">
+            ⚽ PL Admin
+            <small>Yönetim Paneli</small>
+        </div>
+
+        <nav class="admin-nav">
+            <div class="admin-nav-section">Genel</div>
+            <a asp-controller="Admin" asp-action="Index">
+                <span class="icon">📊</span> Dashboard
+            </a>
+
+            <div class="admin-nav-section">Lig Yönetimi</div>
+            <a asp-controller="Season" asp-action="SeasonList">
+                <span class="icon">🗓</span> Sezonlar
+            </a>
+            <a asp-controller="Stadium" asp-action="StadiumList">
+                <span class="icon">🏟</span> Stadyumlar
+            </a>
+            <a asp-controller="Referee" asp-action="RefereeList">
+                <span class="icon">🟨</span> Hakemler
+            </a>
+            <a asp-controller="GameWeek" asp-action="GameWeekList">
+                <span class="icon">📅</span> Maç Haftaları
+            </a>
+            <a asp-controller="Team" asp-action="TeamList">
+                <span class="icon">🛡</span> Takımlar
+            </a>
+
+            <div class="admin-nav-section">Maç Yönetimi</div>
+            <a asp-controller="Match" asp-action="MatchList">
+                <span class="icon">📋</span> Fikstür
+            </a>
+            <a asp-controller="MatchEvent" asp-action="MatchEventList">
+                <span class="icon">⚡</span> Maç Olayları
+            </a>
+            <a asp-controller="MatchStatistics" asp-action="StatisticsList">
+                <span class="icon">📈</span> İstatistikler
+            </a>
+        </nav>
+
+        <div class="admin-back">
+            <a asp-controller="Home" asp-action="Index">← Siteye Dön</a>
+        </div>
+    </div>
+
+    <div class="admin-content">
+        @RenderBody()
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

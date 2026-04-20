@@ -1,0 +1,161 @@
+﻿@{
+    ViewData["Title"] = "Anasayfa";
+}
+
+<!-- HERO -->
+<div class="pl-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1>İngiltere <span>Premier</span> Ligi</h1>
+                <p>2025/26 Sezonu · 380 Maç · 20 Takım</p>
+            </div>
+            <div class="col-md-4 text-end d-none d-md-block">
+                <div style="font-family:'Bebas Neue',sans-serif; font-size:5rem; color:rgba(0,255,133,0.15); line-height:1;">PL</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row g-4">
+
+        <!-- PUAN DURUMU -->
+        <div class="col-lg-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="pl-section-title">Puan Durumu</div>
+                <a asp-controller="Home" asp-action="Standings" style="color:#38003c; font-size:0.8rem; font-weight:600;">Tümünü Gör →</a>
+            </div>
+            <div id="standings-widget">
+                <div class="text-center py-4 text-muted">Yükleniyor...</div>
+            </div>
+        </div>
+
+        <!-- MAÇLAR -->
+        <div class="col-lg-7">
+            <div id="live-section" style="display:none;">
+                <div class="pl-section-title" style="color:#dc2626; border-color:#dc2626;">🔴 Canlı Maçlar</div>
+                <div id="live-matches"></div>
+            </div>
+
+            <div class="pl-section-title mt-2">Son Maçlar</div>
+            <div id="recent-matches">
+                <div class="text-center py-4 text-muted">Yükleniyor...</div>
+            </div>
+
+            <div class="pl-section-title mt-4">Yaklaşan Maçlar</div>
+            <div id="upcoming-matches">
+                <div class="text-center py-4 text-muted">Yükleniyor...</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let teamLogos = {};
+
+        function teamLogo(name) {
+            const url = teamLogos[name];
+            if (url) return `<img src="${url}" style="width:32px;height:32px;object-fit:contain;" onerror="this.style.display='none'">`;
+            return `<div class="team-logo">${name.split(' ').map(w=>w[0]).join('').substring(0,3).toUpperCase()}</div>`;
+        }
+
+        function teamLogoLg(name) {
+            const url = teamLogos[name];
+            if (url) return `<img src="${url}" style="width:56px;height:56px;object-fit:contain;margin:0 auto 8px;display:block;" onerror="this.style.display='none'">`;
+            return `<div class="team-logo" style="width:56px;height:56px;font-size:1rem;margin:0 auto 8px;">${name.split(' ').map(w=>w[0]).join('').substring(0,3).toUpperCase()}</div>`;
+        }
+
+        function formBadge(r) {
+            if(r==='W') return '<span class="form-badge form-w">G</span>';
+            if(r==='D') return '<span class="form-badge form-d">B</span>';
+            return '<span class="form-badge form-l">M</span>';
+        }
+
+        function matchCard(m) {
+            let scoreHtml = '';
+            if(m.status === 'Finished') {
+                scoreHtml = `<div class="pl-score-box">${m.homeScore} - ${m.awayScore}</div>
+                             <div class="pl-status-finished mt-1">Bitti</div>`;
+            } else if(m.status === 'Ongoing') {
+                scoreHtml = `<div class="pl-score-box">${m.homeScore??0} - ${m.awayScore??0}</div>
+                             <div class="mt-1"><span class="pl-status-live">CANLI</span></div>`;
+            } else {
+                let d = new Date(m.matchDate);
+                let dateStr = d.toLocaleDateString('tr-TR', {day:'2-digit', month:'short'});
+                let timeStr = d.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+                scoreHtml = `<div class="pl-score-upcoming">${dateStr}<br>${timeStr}</div>`;
+            }
+            return `<a href="/Home/MatchDetail/${m.matchId}" class="pl-match-card">
+                <div class="pl-match-team">
+                    ${teamLogo(m.homeTeamName)}
+                    <span>${m.homeTeamName}</span>
+                </div>
+                <div class="pl-match-score">${scoreHtml}</div>
+                <div class="pl-match-team away">
+                    ${teamLogo(m.awayTeamName)}
+                    <span>${m.awayTeamName}</span>
+                </div>
+            </a>`;
+        }
+
+        // Önce takımları çek, logoları map'e al
+        fetch('http://localhost:7146/api/Team')
+            .then(r => r.json())
+            .then(teams => {
+                teams.forEach(t => { teamLogos[t.teamName] = t.logoUrl; });
+
+                // Puan durumu
+                fetch('http://localhost:7146/api/Match/Standings')
+                    .then(r => r.json())
+                    .then(data => {
+                        let html = `<div class="pl-standings"><table>
+                            <thead><tr><th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>A</th><th>P</th><th>Son 5</th></tr></thead>
+                            <tbody>`;
+                        data.slice(0,8).forEach((t, i) => {
+                            let rankClass = i < 4 ? 'pl-rank-cl' : i === 4 ? 'pl-rank-el' : '';
+                            let form = (t.last5||[]).map(formBadge).join('');
+                            html += `<tr class="${rankClass}">
+                                <td class="rank">${i+1}</td>
+                                <td><div class="d-flex align-items-center gap-2">
+                                    ${teamLogo(t.teamName)}
+                                    <span class="team-name">${t.teamName}</span>
+                                </div></td>
+                                <td>${t.played}</td><td>${t.won}</td><td>${t.drawn}</td><td>${t.lost}</td>
+                                <td>${t.goalDifference>0?'+':''}${t.goalDifference}</td>
+                                <td class="points">${t.points}</td>
+                                <td>${form}</td>
+                            </tr>`;
+                        });
+                        html += `</tbody></table></div>
+                        <div style="padding:8px 0; font-size:0.72rem; color:#6b7280;">
+                            <span style="border-left:3px solid #1e90ff;padding-left:6px;margin-right:12px;">Şampiyonlar Ligi</span>
+                            <span style="border-left:3px solid #ff8c00;padding-left:6px;">Avrupa Ligi</span>
+                        </div>`;
+                        document.getElementById('standings-widget').innerHTML = html;
+                    });
+
+                // Maçlar
+                fetch('http://localhost:7146/api/Match')
+                    .then(r => r.json())
+                    .then(data => {
+                        const live = data.filter(m => m.status === 'Ongoing');
+                        const finished = data.filter(m => m.status === 'Finished').slice(-5).reverse();
+                        const upcoming = data.filter(m => m.status === 'NotPlayed').slice(0, 5);
+
+                        if(live.length > 0) {
+                            document.getElementById('live-section').style.display = 'block';
+                            document.getElementById('live-matches').innerHTML = live.map(matchCard).join('');
+                        }
+                        document.getElementById('recent-matches').innerHTML = finished.length > 0
+                            ? finished.map(matchCard).join('')
+                            : '<p class="text-muted text-center py-3">Henüz tamamlanan maç yok.</p>';
+                        document.getElementById('upcoming-matches').innerHTML = upcoming.length > 0
+                            ? upcoming.map(matchCard).join('')
+                            : '<p class="text-muted text-center py-3">Yaklaşan maç yok.</p>';
+                    });
+            });
+    </script>
+}

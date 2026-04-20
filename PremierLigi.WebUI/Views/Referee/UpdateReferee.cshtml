@@ -1,0 +1,27 @@
+﻿@model PremierLigi.WebUI.Dtos.RefereeDtos.GetByIdRefereeDto
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Hakem Güncelle</h3>
+    <br />
+    <form method="post" action="/Referee/UpdateReferee">
+        <input type="hidden" name="RefereeId" value="@Model.RefereeId" />
+        <div class="mb-3">
+            <label>Ad</label>
+            <input type="text" name="FirstName" value="@Model.FirstName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Soyad</label>
+            <input type="text" name="LastName" value="@Model.LastName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Uyruk</label>
+            <input type="text" name="Nationality" value="@Model.Nationality" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a href="/Referee/RefereeList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

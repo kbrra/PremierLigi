@@ -1,0 +1,63 @@
+﻿@model List<PremierLigi.WebUI.Dtos.MatchDtos.ResultMatchDto>
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Fikstür</h3>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Ev Sahibi</th>
+            <th>Deplasman</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>Skor</th>
+            <th>Olaylar</th>
+            <th>İstatistikler</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MatchId</td>
+                <td>@item.HomeTeamName</td>
+                <td>@item.AwayTeamName</td>
+                <td>@item.MatchDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    @if (item.Status == "Finished")
+                    {
+                        <span class="badge bg-success">Bitti</span>
+                    }
+                    else if (item.Status == "Ongoing")
+                    {
+                        <span class="badge bg-warning text-dark">Devam Ediyor</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Oynanmadı</span>
+                    }
+                </td>
+                <td>
+                    @if (item.HomeScore.HasValue && item.AwayScore.HasValue)
+                    {
+                        @($"{item.HomeScore} - {item.AwayScore}")
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </td>
+                <td><a href="/MatchEvent/MatchEventList?matchId=@item.MatchId" class="btn btn-info btn-sm">Olaylar</a></td>
+                <td><a href="/MatchStatistics/StatisticsDetail?matchId=@item.MatchId" class="btn btn-primary btn-sm">İstatistik</a></td>
+                <td><a href="/Match/DeleteMatch/@item.MatchId" class="btn btn-danger btn-sm">Sil</a></td>
+                <td><a href="/Match/UpdateMatch/@item.MatchId" class="btn btn-success btn-sm">Güncelle</a></td>
+            </tr>
+        }
+    </table>
+    <a href="/Match/CreateMatch" class="btn btn-info">Yeni Maç Ekle</a>
+    <a href="/Match/Standings" class="btn btn-dark ms-2">Puan Durumu</a>
+</div>

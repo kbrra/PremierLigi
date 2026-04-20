@@ -1,0 +1,47 @@
+﻿@model PremierLigi.WebUI.Dtos.GameWeekDtos.GetByIdGameWeekDto
+@{
+    Layout = null;
+    var seasons = ViewBag.Seasons as List<PremierLigi.WebUI.Dtos.SeasonDtos.ResultSeasonDto>;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Maç Haftası Güncelle</h3>
+    <br />
+    <form method="post" action="/GameWeek/UpdateGameWeek">
+        <input type="hidden" name="GameWeekId" value="@Model.GameWeekId" />
+        <div class="mb-3">
+            <label>Hafta Numarası</label>
+            <input type="number" name="WeekNumber" value="@Model.WeekNumber" class="form-control" min="1" max="38" />
+        </div>
+        <div class="mb-3">
+            <label>Sezon</label>
+            <select name="SeasonId" class="form-control">
+                @if (seasons != null)
+                {
+                    foreach (var season in seasons)
+                    {
+                        if (season.SeasonId == Model.SeasonId)
+                        {
+                            <option value="@season.SeasonId" selected>@season.SeasonName</option>
+                        }
+                        else
+                        {
+                            <option value="@season.SeasonId">@season.SeasonName</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Başlangıç Tarihi</label>
+            <input type="date" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Bitiş Tarihi</label>
+            <input type="date" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a href="/GameWeek/GameWeekList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

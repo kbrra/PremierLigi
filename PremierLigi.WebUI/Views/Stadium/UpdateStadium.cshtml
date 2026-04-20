@@ -1,0 +1,27 @@
+﻿@model PremierLigi.WebUI.Dtos.StadiumDtos.GetByIdStadiumDto
+@{
+    Layout = null;
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h3>Stadyum Güncelle</h3>
+    <br />
+    <form method="post" action="/Stadium/UpdateStadium">
+        <input type="hidden" name="StadiumId" value="@Model.StadiumId" />
+        <div class="mb-3">
+            <label>Stadyum Adı</label>
+            <input type="text" name="StadiumName" value="@Model.StadiumName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Şehir</label>
+            <input type="text" name="City" value="@Model.City" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Kapasite</label>
+            <input type="number" name="Capacity" value="@Model.Capacity" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a href="/Stadium/StadiumList" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>
